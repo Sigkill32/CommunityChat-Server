@@ -6,7 +6,7 @@ const app = express();
 const server = app.listen(3001, () => console.log("Listining to port 3001"));
 
 app.get("/", (req, res) => {
-  res.send("Hello world");
+  res.send("Server is Running");
 });
 
 const io = socket(server);
@@ -19,7 +19,6 @@ io.on("connection", socket => {
   socket.on("SET_USER", user => {
     users.push({ [socket.id]: user });
     io.emit("AVILABLE_USERS", users);
-    console.log(users);
   });
   socket.on("chat", data => {
     socket.broadcast.emit("MESSAGE_RECIEVED", data);
@@ -28,7 +27,7 @@ io.on("connection", socket => {
     socket.broadcast.emit("typing", data);
   });
   socket.on("disconnect", () => {
-    console.log(socket.id + " disconnected");
+    console.log(`${socket.id} disconnected`);
     let index = -1;
     for (let i = 0; i < users.length; i++) {
       if (Object.keys(users[i])[0] === socket.id) {
